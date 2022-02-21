@@ -607,6 +607,18 @@ class Voila(Application):
         """Initialize handlers for Voila application."""
         handlers = []
 
+        # Force the wwt relay shim
+        from wwt_kernel_data_relay import load_jupyter_server_extension
+
+        class AppWrapper:
+            settings = self.app.settings
+
+            def add_handlers(self, root, handles):
+                handlers.extend(handles)
+
+        self.web_app = AppWrapper()
+        load_jupyter_server_extension(self)
+
         handlers.extend(
             [
                 (
