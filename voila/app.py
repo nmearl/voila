@@ -135,7 +135,8 @@ class Voila(Application):
         'enable_nbextensions': 'VoilaConfiguration.enable_nbextensions',
         'show_tracebacks': 'VoilaConfiguration.show_tracebacks',
         'preheat_kernel': 'VoilaConfiguration.preheat_kernel',
-        'pool_size': 'VoilaConfiguration.default_pool_size'
+        'pool_size': 'VoilaConfiguration.default_pool_size',
+        'connection_dir_root': 'Voila.connection_dir_root'
     }
     classes = [
         VoilaConfiguration,
@@ -437,7 +438,8 @@ class Voila(Application):
                 'comm_msg',
                 'comm_info_request',
                 'kernel_info_request',
-                'shutdown_request'
+                'shutdown_request',
+                'wwtkdr_claim_key'
             ]
         )
 
@@ -467,6 +469,18 @@ class Voila(Application):
         self.app.settings.update(self.tornado_settings)
 
         handlers = []
+
+        # Force the wwt relay shim
+        from wwt_kernel_data_relay import load_jupyter_server_extension
+
+        class AppWrapper:
+            settings = self.app.settings
+
+            def add_handlers(self, root, handles):
+                handlers.extend(handles)
+
+        self.web_app = AppWrapper()
+        load_jupyter_server_extension(self)
 
         handlers.extend([
             (url_path_join(self.server_url, r'/api/kernels/%s' % _kernel_id_regex), KernelHandler),
