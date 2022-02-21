@@ -237,7 +237,11 @@ class VoilaHandler(BaseVoilaHandler):
             self.flush()
 
     def redirect_to_file(self, path):
-        self.redirect(url_path_join(self.base_url, 'voila', 'files', path))
+        if 'wwt' in path:
+            new_path = url_path_join(self.base_url, path.replace('api/kernels', '/'))
+            self.redirect(new_path)
+        else:
+            self.redirect(url_path_join(self.base_url, 'voila', 'files', path))
 
     def should_use_rendered_notebook(
         self,
