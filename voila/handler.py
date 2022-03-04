@@ -12,6 +12,7 @@ import asyncio
 import os
 from pathlib import Path
 from typing import Dict
+from urllib.parse import urlencode
 
 import tornado.web
 from jupyter_server.base.handlers import JupyterHandler
@@ -263,7 +264,14 @@ class VoilaHandler(BaseVoilaHandler):
             self.flush()
 
     def redirect_to_file(self, path):
-        self.redirect(url_path_join(self.base_url, "voila", "files", path))
+        if 'wwt' in path:
+            new_path = url_path_join(self.base_url, path.replace('api/kernels', '/'))
+            query_items = [(k, x.decode("utf-8")) for k, v in self.request.query_arguments.items() for x in v]
+            query_string = "?" + urlencode(query_items)
+            new_path += query_string
+            self.redirect(new_path)
+        else:
+            self.redirect(url_path_join(self.base_url, 'voila', 'files', path))
 
     def should_use_rendered_notebook(
         self,
