@@ -501,7 +501,7 @@ class Voila(Application):
         handlers = []
 
         # Force the wwt relay shim
-        from wwt_kernel_data_relay import load_jupyter_server_extension
+        from pywwt.jupyter_server import load_jupyter_server_extension
 
         class AppWrapper:
             settings = self.app.settings
