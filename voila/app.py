@@ -134,8 +134,7 @@ class Voila(Application):
         'preheat_kernel': 'VoilaConfiguration.preheat_kernel',
         'strip_sources': 'VoilaConfiguration.strip_sources',
         'template': 'VoilaConfiguration.template',
-        'theme': 'VoilaConfiguration.theme'
-        'pool_size': 'VoilaConfiguration.default_pool_size',
+        'theme': 'VoilaConfiguration.theme',
         'connection_dir_root': 'Voila.connection_dir_root'
     }
     classes = [
